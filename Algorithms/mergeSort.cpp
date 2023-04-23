@@ -1,48 +1,87 @@
+//{ Driver Code Starts
+#include <stdio.h>
 #include <bits/stdc++.h>
 using namespace std;
 
-void merge(vector<int>&nums, int low,int mid, int high){
 
-        int j=mid+1;
-        // counts the reverse pairs
-        for(int i=low;i<=mid;i++){
-            while(j<=high and nums[i]>(long)2*(long)nums[j]){
+
+/* Function to print an array */
+void printArray(int arr[], int size)
+{
+    int i;
+    for (i=0; i < size; i++)
+        printf("%d ", arr[i]);
+    printf("\n");
+}
+
+
+// } Driver Code Ends
+class Solution
+{
+    public:
+    void merge(int arr[], int l, int m, int r)
+    {
+        int i=l,j=m+1;
+        vector<int>temp;
+        while(i<=m and j<=r){
+            if(arr[i]>arr[j]){
+                temp.push_back(arr[j]);
                 j++;
             }
-            count+=j-(mid+1);          // 1 2 3    1 3
-        }
-
-        // sort it into a temp vector
-        vector<int>temp;
-        int left=low,right=mid+1;
-
-        while(left<=mid and right<=high){
-            if(nums[left]<=nums[right]){
-                temp.push_back(nums[left++]);
-            }
             else{
-                temp.push_back(nums[right++]);
+                temp.push_back(arr[i]);
+                i++;
             }
+            
         }
-
-        while(left<=mid){
-            temp.push_back(nums[left++]);
+        while(i<=m){
+            temp.push_back(arr[i]);
+            i++;
         }
-        while(right<=high){
-            temp.push_back(nums[right++]);  
+        while(j<=r){
+            temp.push_back(arr[j]);
+            j++;
         }
-
-        for(int i=low;i<=high;i++){
-            nums[i]=temp[i-low];
+        
+        for(int i=l;i<=r;i++){
+            arr[i]=temp[i-l];
         }
+            
+        
     }
-
-    void mergesort(vector<int>&nums, int low, int high){
-        if(low>=high){
+    public:
+    void mergeSort(int arr[], int l, int r)
+    {
+        if(l>=r){
             return;
         }
-        int mid = low+(high-low)/2;
-        mergesort(nums,low,mid); //left call
-        mergesort(nums,mid+1,high); //right call
-        merge(nums,low,mid,high); // merge
+        int mid=l+(r-l)/2;
+        mergeSort(arr,l,mid);
+        mergeSort(arr,mid+1,r);
+        merge(arr,l,mid,r);
     }
+};
+
+//{ Driver Code Starts.
+
+
+int main()
+{
+    int n,T,i;
+
+    scanf("%d",&T);
+
+    while(T--){
+    
+    scanf("%d",&n);
+    int arr[n+1];
+    for(i=0;i<n;i++)
+      scanf("%d",&arr[i]);
+
+    Solution ob;
+    ob.mergeSort(arr, 0, n-1);
+    printArray(arr, n);
+    }
+    return 0;
+}
+// } Driver Code Ends
